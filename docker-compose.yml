@@ -1,0 +1,17 @@
+version: '3.8'
+services:
+  db:
+    image: postgis/postgis:15-3.3
+    environment:
+      POSTGRES_DB: suppliers
+      POSTGRES_USER: a
+      POSTGRES_PASSWORD: aeroOne
+    ports: ["5432:5432"]
+
+  app:
+    build: .
+    env_file: .env
+    volumes: ["./src:/app/src"]
+    command: uvicorn src.api.main:app --host 0.0.0.0 --port 8000
+    ports: ["8000:8000"]
+    depends_on: ["db"]
