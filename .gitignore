@@ -1,0 +1,63 @@
+# --- Python ---
+__pycache__/
+*.py[co]
+*.pyo
+*.pyd
+*.pdb
+*.so
+*.dylib
+
+# Build artifacts
+build/
+dist/
+wheels/
+*.egg-info/
+.eggs/
+*.manifest
+*.spec
+
+# Unit test / coverage
+.coverage
+coverage.xml
+htmlcov/
+.pytest_cache/
+
+# Type checker / linters
+.mypy_cache/
+.pytype/
+ruff_cache/
+.dmypy.json
+
+# Jupyter / notebooks
+.ipynb_checkpoints/
+*.ipynb
+
+# --- Virtual Environments ---
+.venv/
+env/
+venv/
+ENV/
+
+# --- Environment & Config ---
+.env
+.env.*
+!.env.example   # keep a template with no secrets
+.python-version
+
+# --- Editors / IDEs ---
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# --- Databases / local state ---
+*.sqlite3
+*.db
+*.sql
+*.log
+
+# --- OS / Misc ---
+.DS_Store
+Thumbs.db
+
+tracking_progress.md

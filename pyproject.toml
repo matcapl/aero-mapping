@@ -1,0 +1,30 @@
+[project]
+name = "aero-mapping"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "asyncpg>=0.30.0",
+    "click>=8.2.1",
+    "fastapi>=0.116.1",
+    "folium>=0.20.0",
+    "geopandas>=1.1.1",
+    "geopy>=2.4.1",
+    "overpy>=0.7",
+    "pandas>=2.3.2",
+    "pydantic>=2.11.7",
+    "pydantic-settings>=2.10.1",
+    "python-dotenv>=1.1.1",
+    "requests>=2.32.5",
+    "rtree>=1.4.1",
+    "shapely>=2.1.1",
+    "uvicorn>=0.35.0",
+]
+
+[dependency-groups]
+dev = [
+    "black>=25.1.0",
+    "isort>=6.0.1",
+    "pytest>=8.4.2",
+]
