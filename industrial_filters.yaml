@@ -1,0 +1,26 @@
+overpass_filters:
+  # Broad industrial landuse
+  - "landuse=industrial"
+
+  # Specific industrial activity
+  - "industrial=manufacture"
+  - "industrial=engineering"
+  - "industrial=electronics"
+  - "industrial=metal"
+  - "industrial=plastic"
+  - "industrial=logistics"
+
+  # Buildings
+  - "building~\"warehouse|industrial|factory\""
+
+  # Man-made industrial works
+  - "man_made=works"
+
+  # Specialist craft tags
+  - "craft~\"precision|electronics|metal_construction\""
+
+  # Wholesale shops
+  - "shop=wholesale"
+
+  # Aerospace-related
+  - "aeroway=hangar"
