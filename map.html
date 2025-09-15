@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <title>Suppliers map</title>
+  <link href="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.css" rel="stylesheet" />
+  <style>
+    body { margin:0; padding:0; }
+    #map { position:absolute; top:0; bottom:0; width:100%; height:100vh; }
+    .marker-facility {
+      background: #2b8cbe;
+      border-radius: 50%;
+      width: 14px; height: 14px;
+      box-shadow: 0 0 0 3px rgba(43,140,190,0.25);
+    }
+    .marker-supplier {
+      background: #f03b20;
+      border-radius: 50%;
+      width: 10px; height: 10px;
+      box-shadow: 0 0 0 3px rgba(240,59,32,0.18);
+    }
+    .mapboxgl-popup-content { font-family: Arial, sans-serif; font-size: 13px; }
+    .attribution { position: absolute; bottom: 8px; left: 8px; background: rgba(255,255,255,0.8); padding:6px 8px; border-radius:4px; font-size:12px; }
+  </style>
+</head>
+<body>
+<div id="map"></div>
+<div class="attribution">Map tiles: © OpenStreetMap contributors</div>
+<script src="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.js"></script>
+<script>
+  // Inline style using raster tiles (suitable for MapLibre)
+  const style = {
+    version: 8,
+    sources: {
+      "raster-tiles": {
+        type: "raster",
+        tiles: ["https://a.tile.openstreetmap.org/{z}/{x}/{y}.png", "https://b.tile.openstreetmap.org/{z}/{x}/{y}.png", "https://c.tile.openstreetmap.org/{z}/{x}/{y}.png"],
+        tileSize: 256,
+        attribution: "© OpenStreetMap contributors"
+      }
+    },
+    layers: [
+      { id: "osm-tiles", type: "raster", source: "raster-tiles", minzoom: 0, maxzoom: 19 }
+    ]
+  };
+
+  const map = new maplibregl.Map({
+    container: "map",
+    style: style,
+    center: [-2.5746937917187536, 51.50974275],
+    zoom: 12
+  });
+
+  // GeoJSON features inserted inline
+  const geojson = {"type": "FeatureCollection", "features": [{"type": "Feature", "properties": {"name": "Facility", "type": "facility", "address": "", "distance_miles": 0}, "geometry": {"type": "Point", "coordinates": [-2.5746937917187536, 51.50974275]}}, {"type": "Feature", "properties": {"name": "Filton DC Substation", "address": "", "distance_miles": 0.08, "type": "supplier"}, "geometry": {"type": "Point", "coordinates": [-2.5730055, 51.5093914]}}, {"type": "Feature", "properties": {"name": "Unknown", "address": "", "distance_miles": 0.15, "type": "supplier"}, "geometry": {"type": "Point", "coordinates": [-2.5778568, 51.5105153]}}, {"type": "Feature", "properties": {"name": "Airbus", "address": "", "distance_miles": 0.16, "type": "supplier"}, "geometry": {"type": "Point", "coordinates": [-2.5782763, 51.5090922]}}, {"type": "Feature", "properties": {"name": "Unknown", "address": "", "distance_miles": 0.16, "type": "supplier"}, "geometry": {"type": "Point", "coordinates": [-2.577698, 51.5110502]}}, {"type": "Feature", "properties": {"name": "Unknown", "address": "", "distance_miles": 0.17, "type": "supplier"}, "geometry": {"type": "Point", "coordinates": [-2.5785596, 51.5098126]}}, {"type": "Feature", "properties": {"name": "GKN Aerospace", "address": "", "distance_miles": 0.17, "type": "supplier"}, "geometry": {"type": "Point", "coordinates": [-2.5782844, 51.5088406]}}, {"type": "Feature", "properties": {"name": "Swarf House", "address": "", "distance_miles": 0.19, "type": "supplier"}, "geometry": {"type": "Point", "coordinates": [-2.5790025, 51.5091312]}}, {"type": "Feature", "properties": {"name": "04H", "address": "", "distance_miles": 0.2, "type": "supplier"}, "geometry": {"type": "Point", "coordinates": [-2.5788774, 51.5109796]}}, {"type": "Feature", "properties": {"name": "Unknown", "address": "", "distance_miles": 0.2, "type": "supplier"}, "geometry": {"type": "Point", "coordinates": [-2.5782368, 51.5116427]}}, {"type": "Feature", "properties": {"name": "03C", "address": "", "distance_miles": 0.2, "type": "supplier"}, "geometry": {"type": "Point", "coordinates": [-2.5774273, 51.5121239]}}, {"type": "Feature", "properties": {"name": "03F", "address": "", "distance_miles": 0.22, "type": "supplier"}, "geometry": {"type": "Point", "coordinates": [-2.57656, 51.5126609]}}, {"type": "Feature", "properties": {"name": "GKN Reception", "address": "", "distance_miles": 0.22, "type": "supplier"}, "geometry": {"type": "Point", "coordinates": [-2.5799066, 51.5098416]}}, {"type": "Feature", "properties": {"name": "06C", "address": "", "distance_miles": 0.23, "type": "supplier"}, "geometry": {"type": "Point", "coordinates": [-2.578432, 51.5121816]}}, {"type": "Feature", "properties": {"name": "Unknown", "address": "", "distance_miles": 0.24, "type": "supplier"}, "geometry": {"type": "Point", "coordinates": [-2.5777811, 51.5127139]}}, {"type": "Feature", "properties": {"name": "GKN Goods Inwards", "address": "", "distance_miles": 0.24, "type": "supplier"}, "geometry": {"type": "Point", "coordinates": [-2.5801651, 51.5102407]}}, {"type": "Feature", "properties": {"name": "05H", "address": "", "distance_miles": 0.26, "type": "supplier"}, "geometry": {"type": "Point", "coordinates": [-2.5805456, 51.5106599]}}, {"type": "Feature", "properties": {"name": "Works' Canteen", "address": "", "distance_miles": 0.27, "type": "supplier"}, "geometry": {"type": "Point", "coordinates": [-2.5804795, 51.5112465]}}, {"type": "Feature", "properties": {"name": "Unknown", "address": "", "distance_miles": 0.27, "type": "supplier"}, "geometry": {"type": "Point", "coordinates": [-2.5775171, 51.5132639]}}, {"type": "Feature", "properties": {"name": "10K", "address": "", "distance_miles": 0.29, "type": "supplier"}, "geometry": {"type": "Point", "coordinates": [-2.5769826, 51.5137509]}}, {"type": "Feature", "properties": {"name": "10D", "address": "", "distance_miles": 0.29, "type": "supplier"}, "geometry": {"type": "Point", "coordinates": [-2.5766109, 51.5137018]}}, {"type": "Feature", "properties": {"name": "Unknown", "address": "", "distance_miles": 0.29, "type": "supplier"}, "geometry": {"type": "Point", "coordinates": [-2.5810823, 51.5109852]}}, {"type": "Feature", "properties": {"name": "Airbus AIRTeC", "address": "", "distance_miles": 0.31, "type": "supplier"}, "geometry": {"type": "Point", "coordinates": [-2.5742312, 51.5141807]}}, {"type": "Feature", "properties": {"name": "Unknown", "address": "", "distance_miles": 0.33, "type": "supplier"}, "geometry": {"type": "Point", "coordinates": [-2.5822273, 51.509009]}}, {"type": "Feature", "properties": {"name": "Unknown", "address": "", "distance_miles": 0.33, "type": "supplier"}, "geometry": {"type": "Point", "coordinates": [-2.5781694, 51.5140526]}}, {"type": "Feature", "properties": {"name": "Unknown", "address": "", "distance_miles": 0.36, "type": "supplier"}, "geometry": {"type": "Point", "coordinates": [-2.574968, 51.5149039]}}, {"type": "Feature", "properties": {"name": "Unknown", "address": "", "distance_miles": 0.36, "type": "supplier"}, "geometry": {"type": "Point", "coordinates": [-2.5772192, 51.514686]}}, {"type": "Feature", "properties": {"name": "Filton 20", "address": "", "distance_miles": 0.36, "type": "supplier"}, "geometry": {"type": "Point", "coordinates": [-2.5829911, 51.5100307]}}, {"type": "Feature", "properties": {"name": "Fairways Industrial Estate", "address": "", "distance_miles": 0.36, "type": "supplier"}, "geometry": {"type": "Point", "coordinates": [-2.5822793, 51.5117786]}}, {"type": "Feature", "properties": {"name": "Unknown", "address": "", "distance_miles": 0.37, "type": "supplier"}, "geometry": {"type": "Point", "coordinates": [-2.58314, 51.5088946]}}, {"type": "Feature", "properties": {"name": "07D", "address": "", "distance_miles": 0.37, "type": "supplier"}, "geometry": {"type": "Point", "coordinates": [-2.5762175, 51.5150671]}}, {"type": "Feature", "properties": {"name": "Unknown", "address": "", "distance_miles": 0.39, "type": "supplier"}, "geometry": {"type": "Point", "coordinates": [-2.5778968, 51.5150309]}}, {"type": "Feature", "properties": {"name": "Structural Test Facility", "address": "", "distance_miles": 0.39, "type": "supplier"}, "geometry": {"type": "Point", "coordinates": [-2.5742896, 51.5153324]}}, {"type": "Feature", "properties": {"name": "Unknown", "address": "", "distance_miles": 0.41, "type": "supplier"}, "geometry": {"type": "Point", "coordinates": [-2.5765974, 51.5156179]}}, {"type": "Feature", "properties": {"name": "Unknown", "address": "", "distance_miles": 0.42, "type": "supplier"}, "geometry": {"type": "Point", "coordinates": [-2.5735842, 51.515783]}}, {"type": "Feature", "properties": {"name": "Unknown", "address": "", "distance_miles": 0.42, "type": "supplier"}, "geometry": {"type": "Point", "coordinates": [-2.5751427, 51.5158084]}}, {"type": "Feature", "properties": {"name": "Unknown", "address": "", "distance_miles": 0.44, "type": "supplier"}, "geometry": {"type": "Point", "coordinates": [-2.5793514, 51.515362]}}, {"type": "Feature", "properties": {"name": "Unknown", "address": "", "distance_miles": 0.46, "type": "supplier"}, "geometry": {"type": "Point", "coordinates": [-2.5788084, 51.5158261]}}, {"type": "Feature", "properties": {"name": "Unknown", "address": "", "distance_miles": 0.46, "type": "supplier"}, "geometry": {"type": "Point", "coordinates": [-2.5753458, 51.5164316]}}, {"type": "Feature", "properties": {"name": "Unknown", "address": "", "distance_miles": 0.47, "type": "supplier"}, "geometry": {"type": "Point", "coordinates": [-2.5771139, 51.5164332]}}, {"type": "Feature", "properties": {"name": "Unknown", "address": "", "distance_miles": 0.52, "type": "supplier"}, "geometry": {"type": "Point", "coordinates": [-2.5780448, 51.5170423]}}, {"type": "Feature", "properties": {"name": "Unknown", "address": "", "distance_miles": 0.54, "type": "supplier"}, "geometry": {"type": "Point", "coordinates": [-2.5811358, 51.5163843]}}, {"type": "Feature", "properties": {"name": "Unknown", "address": "", "distance_miles": 0.57, "type": "supplier"}, "geometry": {"type": "Point", "coordinates": [-2.5621173, 51.5072344]}}, {"type": "Feature", "properties": {"name": "Clic Sargent", "address": "", "distance_miles": 0.57, "type": "supplier"}, "geometry": {"type": "Point", "coordinates": [-2.5626824, 51.5061379]}}, {"type": "Feature", "properties": {"name": "Abbey Wood Business Park", "address": "", "distance_miles": 0.57, "type": "supplier"}, "geometry": {"type": "Point", "coordinates": [-2.5624917, 51.5067111]}}, {"type": "Feature", "properties": {"name": "OC Robotics", "address": "", "distance_miles": 0.58, "type": "supplier"}, "geometry": {"type": "Point", "coordinates": [-2.5621213, 51.5067346]}}, {"type": "Feature", "properties": {"name": "Unknown", "address": "", "distance_miles": 0.64, "type": "supplier"}, "geometry": {"type": "Point", "coordinates": [-2.5665457, 51.5175177]}}, {"type": "Feature", "properties": {"name": "Unknown", "address": "", "distance_miles": 0.7, "type": "supplier"}, "geometry": {"type": "Point", "coordinates": [-2.5655558, 51.5181627]}}, {"type": "Feature", "properties": {"name": "Unknown", "address": "", "distance_miles": 0.79, "type": "supplier"}, "geometry": {"type": "Point", "coordinates": [-2.5902616, 51.5156966]}}, {"type": "Feature", "properties": {"name": "Royal Mail Filton Sorting Office", "address": "", "distance_miles": 0.87, "type": "supplier"}, "geometry": {"type": "Point", "coordinates": [-2.5725752, 51.5222773]}}, {"type": "Feature", "properties": {"name": "Unknown", "address": "", "distance_miles": 0.87, "type": "supplier"}, "geometry": {"type": "Point", "coordinates": [-2.5669919, 51.5213021]}}, {"type": "Feature", "properties": {"name": "Rolls-Royce Bristol", "address": "", "distance_miles": 1.18, "type": "supplier"}, "geometry": {"type": "Point", "coordinates": [-2.5665407, 51.5259896]}}]};
+
+  map.on('load', () => {
+    // Add suppliers/facility as a GeoJSON source
+    map.addSource('points', { type: 'geojson', data: geojson });
+
+    // Circle layer for suppliers
+    map.addLayer({
+      id: 'suppliers-layer',
+      type: 'circle',
+      source: 'points',
+      filter: ['==', ['get', 'type'], 'supplier'],
+      paint: {
+        'circle-radius': 6,
+        'circle-color': '#f03b20',
+        'circle-stroke-color': '#fff',
+        'circle-stroke-width': 1
+      }
+    });
+
+    // Symbol layer for facility (larger)
+    map.addLayer({
+      id: 'facility-layer',
+      type: 'circle',
+      source: 'points',
+      filter: ['==', ['get', 'type'], 'facility'],
+      paint: {
+        'circle-radius': 8,
+        'circle-color': '#2b8cbe',
+        'circle-stroke-color': '#fff',
+        'circle-stroke-width': 1.5
+      }
+    });
+
+    // Popup on click
+    map.on('click', 'suppliers-layer', (e) => {
+      const props = e.features[0].properties;
+      const html = `<strong>${props.name}</strong><br/>${props.address || ''}<br/>${props.distance_miles} miles`;
+      new maplibregl.Popup().setLngLat(e.lngLat).setHTML(html).addTo(map);
+    });
+    map.on('click', 'facility-layer', (e) => {
+      const props = e.features[0].properties;
+      const html = `<strong>Facility: ${props.name}</strong><br/>${props.address || ''}`;
+      new maplibregl.Popup().setLngLat(e.lngLat).setHTML(html).addTo(map);
+    });
+
+    // Change the cursor to a pointer when over points
+    map.on('mouseenter', 'suppliers-layer', () => map.getCanvas().style.cursor = 'pointer');
+    map.on('mouseleave', 'suppliers-layer', () => map.getCanvas().style.cursor = '');
+    map.on('mouseenter', 'facility-layer', () => map.getCanvas().style.cursor = 'pointer');
+    map.on('mouseleave', 'facility-layer', () => map.getCanvas().style.cursor = '');
+  });
+</script>
+</body>
+</html>

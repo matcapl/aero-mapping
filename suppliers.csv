@@ -1,0 +1,52 @@
+name,address,lat,lon,distance_miles,source,confidence
+Filton DC Substation,,51.5093914,-2.5730055,0.08,overpass,0.5
+Unknown,,51.5105153,-2.5778568,0.15,overpass,0.7
+Airbus,,51.5090922,-2.5782763,0.16,overpass,0.7
+Unknown,,51.5110502,-2.5776980,0.16,overpass,0.7
+Unknown,,51.5098126,-2.5785596,0.17,overpass,0.7
+GKN Aerospace,,51.5088406,-2.5782844,0.17,overpass,0.9
+Swarf House,,51.5091312,-2.5790025,0.19,overpass,0.7
+04H,,51.5109796,-2.5788774,0.2,overpass,0.7
+Unknown,,51.5116427,-2.5782368,0.2,overpass,0.7
+03C,,51.5121239,-2.5774273,0.2,overpass,0.7
+03F,,51.5126609,-2.5765600,0.22,overpass,0.7
+GKN Reception,,51.5098416,-2.5799066,0.22,overpass,0.7
+06C,,51.5121816,-2.5784320,0.23,overpass,0.7
+Unknown,,51.5127139,-2.5777811,0.24,overpass,0.7
+GKN Goods Inwards,,51.5102407,-2.5801651,0.24,overpass,0.7
+05H,,51.5106599,-2.5805456,0.26,overpass,0.7
+Works' Canteen,,51.5112465,-2.5804795,0.27,overpass,0.7
+Unknown,,51.5132639,-2.5775171,0.27,overpass,0.7
+10K,,51.5137509,-2.5769826,0.29,overpass,0.7
+10D,,51.5137018,-2.5766109,0.29,overpass,0.7
+Unknown,,51.5109852,-2.5810823,0.29,overpass,0.7
+Airbus AIRTeC,,51.5141807,-2.5742312,0.31,overpass,0.7
+Unknown,,51.5090090,-2.5822273,0.33,overpass,0.7
+Unknown,,51.5140526,-2.5781694,0.33,overpass,0.7
+Unknown,,51.5149039,-2.5749680,0.36,overpass,0.7
+Unknown,,51.5146860,-2.5772192,0.36,overpass,0.7
+Filton 20,,51.5100307,-2.5829911,0.36,overpass,0.5
+Fairways Industrial Estate,,51.5117786,-2.5822793,0.36,overpass,0.5
+Unknown,,51.5088946,-2.5831400,0.37,overpass,0.7
+07D,,51.5150671,-2.5762175,0.37,overpass,0.7
+Unknown,,51.5150309,-2.5778968,0.39,overpass,0.7
+Structural Test Facility,,51.5153324,-2.5742896,0.39,overpass,0.7
+Unknown,,51.5156179,-2.5765974,0.41,overpass,0.7
+Unknown,,51.5157830,-2.5735842,0.42,overpass,0.7
+Unknown,,51.5158084,-2.5751427,0.42,overpass,0.7
+Unknown,,51.5153620,-2.5793514,0.44,overpass,0.7
+Unknown,,51.5158261,-2.5788084,0.46,overpass,0.7
+Unknown,,51.5164316,-2.5753458,0.46,overpass,0.7
+Unknown,,51.5164332,-2.5771139,0.47,overpass,0.7
+Unknown,,51.5170423,-2.5780448,0.52,overpass,0.7
+Unknown,,51.5163843,-2.5811358,0.54,overpass,0.7
+Unknown,,51.5072344,-2.5621173,0.57,overpass,0.7
+Clic Sargent,,51.5061379,-2.5626824,0.57,overpass,0.7
+Abbey Wood Business Park,,51.5067111,-2.5624917,0.57,overpass,0.5
+OC Robotics,,51.5067346,-2.5621213,0.58,overpass,0.7
+Unknown,,51.5175177,-2.5665457,0.64,overpass,0.7
+Unknown,,51.5181627,-2.5655558,0.7,overpass,0.5
+Unknown,,51.5156966,-2.5902616,0.79,overpass,0.7
+Royal Mail Filton Sorting Office,,51.5222773,-2.5725752,0.87,overpass,0.7
+Unknown,,51.5213021,-2.5669919,0.87,overpass,0.7
+Rolls-Royce Bristol,,51.5259896,-2.5665407,1.18,overpass,0.5
