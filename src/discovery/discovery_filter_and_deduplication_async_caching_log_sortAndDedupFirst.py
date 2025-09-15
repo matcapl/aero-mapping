@@ -7,30 +7,20 @@ from geopy.distance import geodesic
 from src.core.config import settings
 
 # ------------------------------------------------------------------------------
-# Top-level defaults
-# ------------------------------------------------------------------------------
 DEFAULT_DEDUPLICATE = True
 DEFAULT_REVERSE_GEOCODE = False
 ENABLE_REVERSE_GEOCODE_CACHE = True
-MAX_CONCURRENT_REVERSE_GEOCODE = 10  # throttle concurrent requests
+MAX_CONCURRENT_REVERSE_GEOCODE = 10
 
-# ------------------------------------------------------------------------------
-# In-memory cache & semaphore
-# ------------------------------------------------------------------------------
 _reverse_geocode_cache = {}
 _reverse_geocode_semaphore = asyncio.Semaphore(MAX_CONCURRENT_REVERSE_GEOCODE)
 
-# ------------------------------------------------------------------------------
-# Load Overpass filters
-# ------------------------------------------------------------------------------
 FILTERS_FILE = os.path.join(os.path.dirname(__file__), "..", "..", "industrial_filters.yaml")
 with open(FILTERS_FILE, "r") as f:
     FILTERS = yaml.safe_load(f).get("overpass_filters", [])
 
 api = overpy.Overpass(url=settings.overpass_url)
 
-# ------------------------------------------------------------------------------
-# Confidence scoring
 # ------------------------------------------------------------------------------
 def score_supplier(tags: dict) -> float:
     name = tags.get("name", "").lower()
@@ -40,9 +30,6 @@ def score_supplier(tags: dict) -> float:
         return 0.7
     return 0.5
 
-# ------------------------------------------------------------------------------
-# Deduplication
-# ------------------------------------------------------------------------------
 def deduplicate_suppliers(suppliers: list[dict], distance_m: float = 50.0) -> list[dict]:
     unique = []
     for s in suppliers:
@@ -58,11 +45,9 @@ def deduplicate_suppliers(suppliers: list[dict], distance_m: float = 50.0) -> li
     return unique
 
 # ------------------------------------------------------------------------------
-# Async reverse geocode with throttling, caching, and progress logging
-# ------------------------------------------------------------------------------
-async def async_reverse_geocode(lat: float, lon: float, progress_queue: asyncio.Queue) -> dict:
+async def async_reverse_geocode(lat: float, lon: float, progress_queue: asyncio.Queue, use_cache: bool = True) -> dict:
     cache_key = (round(lat, 6), round(lon, 6))
-    if ENABLE_REVERSE_GEOCODE_CACHE and cache_key in _reverse_geocode_cache:
+    if use_cache and cache_key in _reverse_geocode_cache:
         await progress_queue.put(1)
         return _reverse_geocode_cache[cache_key]
 
@@ -80,7 +65,7 @@ async def async_reverse_geocode(lat: float, lon: float, progress_queue: asyncio.
                         "city": addr.get("city", addr.get("town", "")),
                         "country": addr.get("country", "")
                     }
-                    if ENABLE_REVERSE_GEOCODE_CACHE:
+                    if use_cache:
                         _reverse_geocode_cache[cache_key] = result
                     await progress_queue.put(1)
                     return result
@@ -90,8 +75,6 @@ async def async_reverse_geocode(lat: float, lon: float, progress_queue: asyncio.
     await progress_queue.put(1)
     return {}
 
-# ------------------------------------------------------------------------------
-# Convert Overpass element to supplier dict
 # ------------------------------------------------------------------------------
 def element_to_supplier(element, lat0, lon0) -> dict:
     lat, lon = getattr(element, "center_lat", getattr(element, "lat", None)), getattr(element, "center_lon", getattr(element, "lon", None))
@@ -107,22 +90,15 @@ def element_to_supplier(element, lat0, lon0) -> dict:
     }
 
 # ------------------------------------------------------------------------------
-# Main discovery function: dedup first, then reverse-geocode with logging
-# ------------------------------------------------------------------------------
 async def find_suppliers(
     lat: float,
     lon: float,
     radius_miles: float,
     deduplicate: bool = DEFAULT_DEDUPLICATE,
-    reverse_geocode: bool = DEFAULT_REVERSE_GEOCODE
+    reverse_geocode: bool = DEFAULT_REVERSE_GEOCODE,
+    cache: bool = ENABLE_REVERSE_GEOCODE_CACHE  # <-- new
 ) -> list[dict]:
-    """
-    Fetch aerospace/industrial suppliers from Overpass with:
-    - optional deduplication (applied before reverse-geocode)
-    - async reverse geocode with progress logging
-    - caching of results
-    """
-    print(f"Settings: deduplicate={deduplicate}, reverse_geocode={reverse_geocode}, cache={ENABLE_REVERSE_GEOCODE_CACHE}")
+    print(f"Settings: deduplicate={deduplicate}, reverse_geocode={reverse_geocode}, cache={cache}")
 
     radius_m = radius_miles * 1609.34
 
@@ -136,20 +112,16 @@ async def find_suppliers(
     query = f"({''.join(clauses)}); out center;"
     result = api.query(query)
 
-    # Convert elements to supplier dicts
     suppliers = [element_to_supplier(e, lat, lon) for e in result.nodes + result.ways
                  if getattr(e, 'lat', True) or getattr(e, 'center_lat', True)]
 
-    # Optional deduplication **first** to reduce reverse-geocode workload
     if deduplicate:
         suppliers = deduplicate_suppliers(suppliers)
 
-    # Optional async reverse geocode with progress logging
     if reverse_geocode and suppliers:
         progress_queue = asyncio.Queue()
-        tasks = [async_reverse_geocode(s["lat"], s["lon"], progress_queue) for s in suppliers]
+        tasks = [async_reverse_geocode(s["lat"], s["lon"], progress_queue, use_cache=cache) for s in suppliers]
 
-        # Monitor progress
         async def monitor():
             total = len(tasks)
             completed = 0
@@ -166,5 +138,4 @@ async def find_suppliers(
         for s, a in zip(suppliers, addresses):
             s.update(a)
 
-    # Sort by distance
     return sorted(suppliers, key=lambda x: x["distance_miles"])

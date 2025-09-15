@@ -29,4 +29,8 @@ dev = [
     "black>=25.1.0",
     "isort>=6.0.1",
     "pytest>=8.4.2",
+    "pytest-asyncio>=1.1.0",
 ]
+
+[tool.poetry.scripts]
+test-providers = "bash:tests/test_six_geocoders.sh"
