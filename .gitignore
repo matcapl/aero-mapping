@@ -59,5 +59,3 @@ ENV/
 # --- OS / Misc ---
 .DS_Store
 Thumbs.db
-
-tracking_progress.md
