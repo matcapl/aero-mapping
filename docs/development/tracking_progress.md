@@ -226,5 +226,9 @@ codium scripts/health_check.sh
 chmod +x scripts/health_check.sh
 ./scripts/health_check.sh
 
+docker-compose down -v
+docker-compose up -d --build
+docker-compose exec db psql -U a -d suppliers -c "\dt"
+
 Summary
 This OSM‐based variant requires no paid API keys, minimal registration, and leverages Nominatim + Overpass for geocoding and discovery. Follow the seven steps—Init, DB, Geocode, Discover, Pipeline, Visualize, Deploy—with their three sub‐tasks each. At the end, you will have a working Dockerized MVP that geocodes a Tier-1 facility, discovers nearby Tier-2 suppliers, stores them in PostGIS, exports CSV, and displays an interactive map—all without Google Maps.

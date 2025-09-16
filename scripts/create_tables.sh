@@ -17,7 +17,11 @@ CREATE TABLE facilities (
 );
 CREATE TABLE suppliers (
   id SERIAL PRIMARY KEY, name TEXT, address TEXT,
-  location GEOGRAPHY(POINT,4326), source TEXT, confidence FLOAT,
+  location GEOGRAPHY(POINT,4326), source TEXT, confidence FLOAT, 
+  product_category TEXT, md_name TEXT, linkedin_url TEXT,
+  companies_house_number TEXT, companies_house_url TEXT,
+  customers_list TEXT[], website scraped at TIMESTAMP,
+  enrichment_status TEXT DEFAULT 'pending',
   created_at TIMESTAMP DEFAULT NOW(), updated_at TIMESTAMP DEFAULT NOW()
 );
 CREATE TABLE facility_suppliers (

@@ -3,10 +3,10 @@
 Enterprise-grade supplier discovery using OpenStreetMap data and multiple geocoding providers.
 
 ## Quick Start
-Start Docker services
+### Start Docker services
 docker-compose up -d --build
 
-Run discovery pipeline
+### Run discovery pipeline
 docker-compose run --rm
 -e DATABASE_LOCAL_URL="postgresql://a:aeroOne@db:5432/suppliers"
 -e LOCATIONIQ_KEY="your_key"
@@ -14,8 +14,6 @@ app uv run python -m src.pipeline
 --address "Bristol, UK"
 --radius 10
 --verbose
-
-text
 
 ## Features
 - **Multi-Provider Geocoding**: 6 geocoding services with intelligent failover
