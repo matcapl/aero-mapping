@@ -1,4 +1,3 @@
-version: '3.8'
 services:
   db:
     image: postgis/postgis:15-3.3
@@ -6,12 +5,28 @@ services:
       POSTGRES_DB: suppliers
       POSTGRES_USER: a
       POSTGRES_PASSWORD: aeroOne
-    ports: ["5432:5432"]
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U a -d suppliers"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
   app:
     build: .
-    env_file: .env
-    volumes: ["./src:/app/src"]
-    command: uvicorn src.api.main:app --host 0.0.0.0 --port 8000
-    ports: ["8000:8000"]
-    depends_on: ["db"]
+    env_file: 
+      - .env.docker  # Use Docker-specific environment
+    depends_on:
+      db:
+        condition: service_healthy  # Wait for DB to be ready
+    volumes:
+      - ./src:/app/src  # For development
+    command: tail -f /dev/null  # Keep container running
+    # Uncomment for direct pipeline run:
+    # command: uv run python -m src.pipeline --address "Bristol, UK" --radius 2
+
+volumes:
+  postgres_data:
