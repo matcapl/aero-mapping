@@ -3,6 +3,7 @@ from pydantic import Field
 
 class Settings(BaseSettings):
     database_neon_url: str = Field(..., env="DATABASE_NEON_URL")
+    neon_api_key: str = Field(..., env="NEON_API_KEY")
     database_local_url: str = Field(..., env="DATABASE_LOCAL_URL")
     nominatim_url: str = Field(..., env="NOMINATIM_URL")
     overpass_url: str = Field(..., env="OVERPASS_URL")
