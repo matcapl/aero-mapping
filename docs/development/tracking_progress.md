@@ -98,23 +98,6 @@ Time elapsed: 875.54 seconds
 Count: 598
 Sample: [{'name': 'GKN Aerospace', 'address': '', 'lat': Decimal('51.5088406'), 'lon': Decimal('-2.5782844'), 'distance_miles': 0.58, 'source': 'overpass', 'confidence': 0.9}, {'name': 'Swarf House', 'address': '', 'lat': Decimal('51.5091312'), 'lon': Decimal('-2.5790025'), 'distance_miles': 0.6, 'source': 'overpass', 'confidence': 0.7}]
 
-codium src/discovery/discovery_filter_and_deduplication_async_caching_transparent.py
-uv run python - <<EOF
-import asyncio
-import time
-from src.geocode.geocode import geocode_address
-from src.discovery.discovery_filter_and_deduplication_async_caching_transparent import find_suppliers
-start = time.time()
-lat, lon = geocode_address("Filton, Bristol, UK")
-suppliers = asyncio.run(find_suppliers(lat, lon, 5, deduplicate=True, reverse_geocode=True))
-elapsed = time.time() - start
-print(f"Time elapsed: {elapsed:.2f} seconds")
-print("Count:", len(suppliers))
-print("Sample:", suppliers[:2])
-EOF
---
-
-
 codium src/discovery/discovery_filter_and_deduplication_async_caching_log.py
 uv run python - <<EOF
 import asyncio
@@ -153,7 +136,7 @@ from src.discovery.discovery_filter_and_deduplication_async_caching_log_sortAndD
 start = time.time()
 lat, lon = geocode_address("Filton, Bristol, UK")
 suppliers = asyncio.run(
-    find_suppliers(lat, lon, 5, deduplicate=True, reverse_geocode=True)
+    find_suppliers(lat, lon, 10, deduplicate=True, reverse_geocode=True)
 )
 elapsed = time.time() - start
 print(f"Time elapsed: {elapsed:.2f} seconds")
@@ -176,9 +159,35 @@ Sample: [{'name': 'GKN Aerospace', 'address': '', 'lat': Decimal('51.5088406'), 
 # testing and expanding to six geocoders
 uv run python -c "import sys, pathlib; print('cwd=', pathlib.Path.cwd()); import importlib; importlib.import_module('src.geocode.providers'); print('ok')"
 
+# possibly redundant now
 uv run python scripts/check_providers_async.py
 
+# test for six geocoders
+uv run python - <<EOF
+import asyncio
+import time
+from src.geocode.geocode import geocode_address
+from src.discovery.discovery_filter_and_deduplication_async_caching_log_sortAndDedupFirst import find_suppliers
+start = time.time()
+lat, lon = geocode_address("Filton, Bristol, UK")
+suppliers = asyncio.run(
+    find_suppliers(lat, lon, 1, deduplicate=True, reverse_geocode=True)
+)
+elapsed = time.time() - start
+print(f"Time elapsed: {elapsed:.2f} seconds")
+print("Count:", len(suppliers))
+print("Sample:", suppliers[:2])
+EOF
+Settings: deduplicate=True, reverse_geocode=True, cache=True
+Reverse-geocode progress: 10/37
+Reverse-geocode progress: 20/37
+Reverse-geocode progress: 30/37
+Reverse-geocode progress: 37/37
+Time elapsed: 37.51 seconds
+Count: 37
+Sample: [{'name': 'GKN Aerospace', 'address': '', 'lat': Decimal('51.5088406'), 'lon': Decimal('-2.5782844'), 'distance_miles': 0.58, 'source': 'overpass', 'confidence': 0.9}, {'name': 'Swarf House', 'address': '', 'lat': Decimal('51.5091312'), 'lon': Decimal('-2.5790025'), 'distance_miles': 0.6, 'source': 'overpass', 'confidence': 0.7}]
 
+# full pipeline
 codium src/pipeline.py
 uv run python -m src.pipeline \
   --address "New Filton House, Filton, Bristol BS99 7AR, UK" \
@@ -229,6 +238,31 @@ chmod +x scripts/health_check.sh
 docker-compose down -v
 docker-compose up -d --build
 docker-compose exec db psql -U a -d suppliers -c "\dt"
+
+--
+
+# Test all six providers with a reasonable scope
+uv run python - <<EOF
+import asyncio
+import time
+from src.geocode.providers import default_manager
+from src.discovery.discovery_filter_and_deduplication_async_caching_log_sortAndDedupFirst import find_suppliers
+address = "Airbus, Filton, Bristol, UK"
+radius = 20  # miles - good balance for testing
+start = time.time()
+manager = default_manager()
+lat, lon, provider = asyncio.run(manager.geocode(address, verbose=True))
+print(f"Successfully geocoded by {provider}: {lat}, {lon}")
+suppliers = asyncio.run(
+    find_suppliers(lat, lon, radius, deduplicate=True, reverse_geocode=True)
+)
+elapsed = time.time() - start
+print(f"Total time: {elapsed:.2f}s")
+print(f"Suppliers found: {len(suppliers)}")
+print("Top 3:", suppliers[:3])
+EOF
+
+
 
 Summary
 This OSM‐based variant requires no paid API keys, minimal registration, and leverages Nominatim + Overpass for geocoding and discovery. Follow the seven steps—Init, DB, Geocode, Discover, Pipeline, Visualize, Deploy—with their three sub‐tasks each. At the end, you will have a working Dockerized MVP that geocodes a Tier-1 facility, discovers nearby Tier-2 suppliers, stores them in PostGIS, exports CSV, and displays an interactive map—all without Google Maps.
